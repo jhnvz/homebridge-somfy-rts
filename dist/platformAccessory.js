@@ -58,14 +58,18 @@ class SomfyRTSPlatformAccessory {
         this.state.targetPosition = value;
         this.service.setCharacteristic(this.platform.Characteristic.PositionState, this.state.state);
         if (value > this.state.position) {
-            this.state.state = this.platform.Characteristic.PositionState.INCREASING;
-            this.service.setCharacteristic(this.platform.Characteristic.PositionState, this.state.state);
-            this.api.up();
+            if (this.state.state !== this.platform.Characteristic.PositionState.INCREASING) {
+                this.state.state = this.platform.Characteristic.PositionState.INCREASING;
+                this.service.setCharacteristic(this.platform.Characteristic.PositionState, this.state.state);
+                this.api.up();
+            }
         }
         else if (value !== this.state.position) {
-            this.state.state = this.platform.Characteristic.PositionState.DECREASING;
-            this.service.setCharacteristic(this.platform.Characteristic.PositionState, this.state.state);
-            this.api.down();
+            if (this.state.state !== this.platform.Characteristic.PositionState.DECREASING) {
+                this.state.state = this.platform.Characteristic.PositionState.DECREASING;
+                this.service.setCharacteristic(this.platform.Characteristic.PositionState, this.state.state);
+                this.api.down();
+            }
         }
         this.setPosition(value);
         this.platform.log.debug(`${this.name}: Set target position ->`, value);
